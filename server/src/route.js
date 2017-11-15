@@ -5,4 +5,7 @@ module.exports = (app) => {
   app.post('/register',
     AthenticationControllerPolicy.register,
     AthenticationController.register)
+
+  app.post('/login',
+    AthenticationController.login)
 }

@@ -1,31 +1,33 @@
 <template>
-  <v-app>
-
     <v-layout column>
       <v-flex xs6 offset-xs3>
         <v-card>
-          <v-toolbar app flat dense class="cyan" dark>
+          <v-toolbar flat dense class="cyan white--text">
             <v-toolbar-title>Register</v-toolbar-title>
           </v-toolbar>
-          <div class="white elevation-2">
-          </div>
+
           <main class="pl-4 pr-4 pt-2 pb-2">
-            <div>
-              <input type="email" name="email" v-model="email" placeholder="email">
-            </div>
-            <div>
-              <input type="password" name="password" v-model="password" placeholder="password">
-            </div>
+            <form name="tab-tracker-form">
+            <v-text-field
+              v-model="email"
+            label="Email">
+            </v-text-field>
+            <v-text-field
+              v-model="password"
+              type="password"
+              autocomplete="new-password"
+              label="Password">
+            </v-text-field>
+            </form>
             <div class="error" v-html="error"></div>
             <div>
-              <v-btn class="cyan" @click="register">Register</v-btn>
+              <v-btn class="cyan white--text" @click="register">Register</v-btn>
             </div>
           </main>
 
         </v-card>
       </v-flex>
     </v-layout>
-  </v-app>
 </template>
 
 <script>
@@ -43,10 +45,12 @@
     methods: {
       async register () {
         try {
-          await AuthenticationService.register({
+          let response = await AuthenticationService.register({
             email: this.email,
             password: this.password
           })
+          this.$store.dispatch('setToken', response.data.token)
+          this.$store.dispatch('setUser', response.data.user)
         } catch (error) {
           this.error = error.response.data.error
         }
