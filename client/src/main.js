@@ -5,11 +5,13 @@ import App from './App'
 import router from './router'
 import vuetify from 'vuetify'
 import {sync} from 'vuex-router-sync'
+import VueYouTubeVideo from 'vue-youtube-embed'
 import store from '@/store/store'
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.config.productionTip = false
 
+Vue.use(VueYouTubeVideo, { global: true })
 Vue.use(vuetify)
 
 sync(store, router)
