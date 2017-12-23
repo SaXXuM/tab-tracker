@@ -1,18 +1,16 @@
 <template>
-  <v-layout column>
-    <v-flex xs6 offset-xs3>
       <panel title="Songs">
-          <v-btn
-            slot="action"
-            class="cyan accent-2"
-            :to="{name: 'songs-create'}"
-            light
-            small
-            absolute
-            right
-            fab>
-            <v-icon>add</v-icon>
-          </v-btn>
+        <v-btn
+          slot="action"
+          class="cyan accent-2"
+          :to="{name: 'songs-create'}"
+          light
+          small
+          absolute
+          right
+          fab>
+          <v-icon>add</v-icon>
+        </v-btn>
         <div v-for="song in songs" :key="song.id" class="song">
           <v-layout>
             <v-flex xs6>
@@ -26,9 +24,9 @@
                 {{song.genre}}
               </div>
               <v-btn
-              dark
-              class="cyan"
-              :to="{name: 'song', params: {songId: song.id}}">
+                dark
+                class="cyan"
+                :to="{name: 'song', params: {songId: song.id}}">
                 View
               </v-btn>
             </v-flex>
@@ -39,13 +37,10 @@
           </v-layout>
         </div>
       </panel>
-    </v-flex>
-  </v-layout>
 </template>
 
 <script>
-  import SongService from '@/services/SongsService'
-  import Panel from '@/components/Panel'
+  import SongsService from '@/services/SongsService'
 
   export default {
     name: 'Songs',
@@ -54,14 +49,13 @@
         songs: null
       }
     },
-    components: {
-      Panel
-    },
-    methods: {
-
-    },
-    async mounted () {
-      this.songs = (await SongService.index()).data
+    watch: {
+      '$route.query.search': {
+        immediate: true,
+        async handler (value) {
+          this.songs = (await SongsService.index(value)).data
+        }
+      }
     }
   }
 </script>

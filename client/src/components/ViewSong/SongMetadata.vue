@@ -11,6 +11,12 @@
         <div class="song-genre">
           {{song.genre}}
         </div>
+        <v-btn
+          dark
+          class="cyan"
+          :to="{name: 'song-edit', params: {songId: song.id}}">
+          Edit
+        </v-btn>
       </v-flex>
       <v-flex xs6>
         <div><img :src="song.albumImageUrl" alt="" class="album-image"></div>
@@ -22,14 +28,10 @@
 </template>
 
 <script>
-  import Panel from '@/components/Panel'
   export default {
     props: [
       'song'
-    ],
-    components: {
-      Panel
-    }
+    ]
   }
 </script>
 

@@ -26,7 +26,6 @@
   import Lyrics from './Lyrics'
   import Tab from './Tab'
   import SongService from '@/services/SongsService'
-  import Panel from '@/components/Panel'
 
   export default {
     name: 'ViewSong',
@@ -36,7 +35,6 @@
       }
     },
     components: {
-      Panel,
       SongMetadata,
       YouTube,
       Lyrics,

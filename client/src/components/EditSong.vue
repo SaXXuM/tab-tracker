@@ -53,7 +53,7 @@
       <div class="error" v-if="error">
         {{error}}
       </div>
-      <v-btn class="cyan white--text" @click="create">Create</v-btn>
+      <v-btn class="cyan white--text" @click="save">Save song</v-btn>
 
     </v-flex>
   </v-layout>
@@ -82,17 +82,33 @@
       }
     },
     methods: {
-      async create () {
+      async save () {
         this.error = null
         const areAllFieldsFilled = Object.keys(this.song).every(key => !!this.song[key])
-        if (areAllFieldsFilled) {
-          await SongService.post(this.song)
-          this.$router.push({
-            name: 'songs'
-          })
-        } else {
+        if (!areAllFieldsFilled) {
           this.error = 'Please fill in all required fields.'
+          return
         }
+        try {
+          const songId = this.$store.state.route.params.songId
+          await SongService.put(this.song)
+          this.$router.push({
+            name: 'song',
+            params: {
+              songId: songId
+            }
+          })
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    },
+    async mounted () {
+      try {
+        const songId = this.$store.state.route.params.songId
+        this.song = (await SongService.show(songId)).data
+      } catch (err) {
+        console.log(err)
       }
     }
   }
