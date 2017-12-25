@@ -24,21 +24,80 @@
           }">
           Edit
         </v-btn>
+        <v-btn
+          v-if="isUserLoggedIn && !bookmark"
+          dark
+          class="cyan"
+          @click="addBookmark"
+        >
+          Bookmark
+        </v-btn>
+        <v-btn
+          v-if="isUserLoggedIn && bookmark"
+          dark
+          class="cyan"
+          @click="removeBookmark"
+        >
+          Remove Bookmark
+        </v-btn>
+
       </v-flex>
       <v-flex xs6>
         <div><img :src="song.albumImageUrl" alt="" class="album-image"></div>
         <div>{{song.album}}</div>
-      </v-flex>
       </v-flex>
     </v-layout>
   </panel>
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+  import BookmarkService from '@/services/BookmarkService'
+
   export default {
+    data () {
+      return {
+        bookmark: null
+      }
+    },
     props: [
       'song'
-    ]
+    ],
+    computed: {
+      ...mapState([
+        'isUserLoggedIn',
+        'user'
+      ])
+    },
+    async mounted () {
+      if (this.isUserLoggedIn) {
+        this.bookmark = (await BookmarkService.index({
+          songId: this.song.id,
+          userId: this.user.id
+        })).data
+      }
+    },
+    methods: {
+      async addBookmark () {
+        try {
+          this.bookmark = (await BookmarkService.post({
+            songId: this.song.id,
+            userId: this.user.id
+          })).data
+        } catch (err) {
+          console.log(err)
+        }
+      },
+      async removeBookmark () {
+        try {
+          await BookmarkService.delete(this.bookmark.id)
+          this.bookmark = null
+        } catch (err) {
+          console.log(err)
+        }
+      }
+
+    }
   }
 </script>
 

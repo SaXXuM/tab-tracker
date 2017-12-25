@@ -40,8 +40,9 @@
       Lyrics,
       Tab
     },
-    async mounted () {
+    async created () {
       const songId = this.$store.state.route.params.songId
+      this.song.id = songId
       this.song = (await SongService.show(songId)).data
     }
   }
