@@ -71,10 +71,13 @@
     },
     async mounted () {
       if (this.isUserLoggedIn) {
-        this.bookmark = (await BookmarkService.index({
+        const bookmarks = (await BookmarkService.index({
           songId: this.song.id,
           userId: this.user.id
         })).data
+        if (bookmarks.length) {
+          this.bookmark = bookmarks[0]
+        }
       }
     },
     methods: {

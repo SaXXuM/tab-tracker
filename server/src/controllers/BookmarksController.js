@@ -1,15 +1,27 @@
-const {Bookmark} = require('../models')
+const {Bookmark, Song} = require('../models')
+const _ = require('lodash')
 
 module.exports = {
   async index (req, res) {
     try {
       const {songId, userId} = req.query
-      const bookmark = await Bookmark.findOne({
-        where: {
-          SongId: songId,
-          UserId: userId
-        }
-      })
+      const where = {
+        UserId: userId
+      }
+      if (songId) {
+        where.songId = songId
+      }
+      const bookmark = await Bookmark.findAll({
+        where,
+        include: [
+          {
+            model: Song
+          }
+        ]})
+        .map(bookmark => bookmark.toJSON())
+        .map(bookmark => _.extend({},
+          bookmark.Song,
+          bookmark))
       if (bookmark) {
         res.send(bookmark)
       } else {
@@ -25,6 +37,7 @@ module.exports = {
   async post (req, res) {
     try {
       const {songId, userId} = req.body
+      console.log(songId, userId)
       let bookmark = await Bookmark.findOne({
         where: {
           SongId: songId,
@@ -36,10 +49,12 @@ module.exports = {
           error: `Already have this set as a bookmark`
         })
       }
-
-      bookmark = await Bookmark.create(req.body)
+      const newBookmark = await Bookmark.create({
+        SongId: songId,
+        UserId: userId
+      })
       res.status(201)
-      res.send(bookmark)
+      res.send(newBookmark)
     } catch (err) {
       console.log(err)
       res.status(400).send({
