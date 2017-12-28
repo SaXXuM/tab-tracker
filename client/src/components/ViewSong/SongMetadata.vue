@@ -72,8 +72,7 @@
     async mounted () {
       if (this.isUserLoggedIn) {
         const bookmarks = (await BookmarkService.index({
-          songId: this.song.id,
-          userId: this.user.id
+          songId: this.song.id
         })).data
         if (bookmarks.length) {
           this.bookmark = bookmarks[0]
@@ -84,8 +83,7 @@
       async addBookmark () {
         try {
           this.bookmark = (await BookmarkService.post({
-            songId: this.song.id,
-            userId: this.user.id
+            songId: this.song.id
           })).data
         } catch (err) {
           console.log(err)

@@ -2,11 +2,11 @@ import Api from '@/services/Api'
 
 export default {
   index (bookmark) {
-    let queryString = `bookmarks?userId=${bookmark.userId}`
-    if (bookmark.songId) {
-      queryString += `&songId=${bookmark.songId}`
+    if (bookmark) {
+      return Api().get(`bookmarks?songId=${bookmark.songId}`)
+    } else {
+      return Api().get('bookmarks')
     }
-    return Api().get(queryString)
   },
   post (bookmark) {
     return Api().post('bookmarks', bookmark)
