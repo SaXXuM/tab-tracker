@@ -11,7 +11,7 @@ module.exports = {
       if (songId) {
         where.songId = songId
       }
-      const bookmark = await Bookmark.findAll({
+      const bookmarks = await Bookmark.findAll({
         where,
         include: [
           {
@@ -22,8 +22,8 @@ module.exports = {
         .map(bookmark => _.extend({},
           bookmark.Song,
           bookmark))
-      if (bookmark) {
-        res.send(bookmark)
+      if (bookmarks) {
+        res.send(bookmarks)
       } else {
         res.status(404).send()
       }
@@ -37,7 +37,6 @@ module.exports = {
   async post (req, res) {
     try {
       const {songId, userId} = req.body
-      console.log(songId, userId)
       let bookmark = await Bookmark.findOne({
         where: {
           SongId: songId,

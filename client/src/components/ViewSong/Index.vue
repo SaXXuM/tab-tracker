@@ -26,6 +26,8 @@
   import Lyrics from './Lyrics'
   import Tab from './Tab'
   import SongService from '@/services/SongsService'
+  import SongHistoryService from '@/services/SongHistoryService'
+  import { mapState } from 'vuex'
 
   export default {
     name: 'ViewSong',
@@ -40,10 +42,24 @@
       Lyrics,
       Tab
     },
+    computed: {
+      ...mapState([
+        'isUserLoggedIn',
+        'user',
+        'route'
+      ])
+    },
     async created () {
-      const songId = this.$store.state.route.params.songId
+      const songId = this.route.params.songId
       this.song.id = songId
       this.song = (await SongService.show(songId)).data
+
+      if (this.isUserLoggedIn) {
+        SongHistoryService.post({
+          songId: songId,
+          userId: this.user.id
+        })
+      }
     }
   }
 </script>
